@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="#!" type="image/x-icon">
+    <title>GTA V Map Interactive</title>
+    <link rel="stylesheet" href="./monmap.css">
+</head>
+
+<body>
+    <main>
+        <leftside class="sidebar" id="sidebar">
+            <h1>MiniMon Map GTA V Interactive</h1>
+            <button class="slider_btn" id="slider_btn">◀</button>
+            <footer>
+                Git: <a href="https://github.com/MiniMon000/GTA-V-Map-Interactive">MiniMon_Git</a><br>
+                Author: <a href="https://github.com/MiniMon000">MiniMon</a><br>
+                Licence: SnootySims
+            </footer>
+        </leftside>
+
+        <mapview>
+            <div id="mapView">
+                <div id="controls">
+                    <div class="button_control">
+                        <!-- Container for the button -->
+                        <div class="zoom-controls">
+                            <button id="zoomIn">+</button>
+                            <button id="zoomOut">-</button>
+                            <button class="fit_btn" id="fit"></button>
+                        </div>
+
+                        <!-- Container for changing the map view -->
+                        <div class="view-controls">
+                            <button id="viewAtlas">Atlas</button>
+                            <button id="viewSatellite">Satellite</button>
+                            <button id="viewRoad">Road</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mapview>
+    </main>
+
+    <!-- script for slide bar -->
+    <script> 
+        const slider_btn = document.getElementById('slider_btn');
+        const sidebar = document.getElementById('sidebar');
+
+        slider_btn.addEventListener('click', function() {
+            if (sidebar.style.transform === 'translateX(0%)' || sidebar.style.transform === '') {
+                sidebar.style.transform = 'translateX(-100%)';
+                slider_btn.textContent = '▶';
+            } else {
+                sidebar.style.transform = 'translateX(0%)';
+                slider_btn.textContent = '◀';
+            }
+        });
+    </script>
+
+    <!-- script for zoom and grab -->
+    <script type="module">
+        import ZoomPan from "./monmap.js";
+        import { hotkeys } from "./../lib/hotkeys.js";
+
+        // DOM helper functions:
+        const el = (sel, par) => (par || document).querySelector(sel);
+
+        // Initialize ZoomPan with options
+        const ZP = new ZoomPan("#mapView", {
+            width: 1000,
+            height: 1000,
+            canDrag: true
+        });
+        
+        hotkeys({
+            "wheelup": (ev) => ZP.scaleWheel(ev),
+            "wheeldown": (ev) => ZP.scaleWheel(ev),
+            "arrowup": () => ZP.panDown(),
+            "arrowdown": () => ZP.panUp(),
+            "arrowleft": () => ZP.panRight(),
+            "arrowright": () => ZP.panLeft(),
+        }, ZP.elViewport);
+
+        el("#zoomIn").addEventListener("click", () => ZP.scaleUp());
+        el("#zoomOut").addEventListener("click", () => ZP.scaleDown());
+        el("#fit").addEventListener("click", () => ZP.fit());
+
+    </script>
+
+    <!-- script for change the map -->
+    <script>
+        const view_atlas_map    = document.getElementById('viewAtlas')
+        const view_sattlite_map = document.getElementById('viewSatellite');
+        const view_road_map     = document.getElementById('viewRoad');
+
+        view_sattlite_map.addEventListener('click', () => {
+            const canvas = document.querySelector('.zoompan .zoompan-canvas');
+            const zoompan = document.querySelector('.zoompan');
+
+            canvas.style.backgroundImage = "url('https://cs3.gtaall.com/screenshots/4dc09/2015-07/large-fit/94c8c98f3412a9190e0fcc9a18084c8c16bf9e13/281900-GTA5-2015-07-27-15-39-18-246.jpg')";
+            zoompan.style.backgroundColor = "#003166";
+            canvas.style.backgroundSize = "580px auto";
+        });
+        view_road_map.addEventListener('click', () => {
+            const canvas = document.querySelector('.zoompan .zoompan-canvas');
+            const zoompan = document.querySelector('.zoompan');
+
+            canvas.style.backgroundImage = "url('https://preview.redd.it/b0nxku2svi581.png?width=640&crop=smart&auto=webp&s=ed14abb964dbca209bc61db393d8dfdb27e7e556')";
+            zoompan.style.backgroundColor = "#384951";
+            canvas.style.backgroundSize = "580px auto";
+        });
+        view_atlas_map.addEventListener('click', () => {
+            const canvas = document.querySelector('.zoompan .zoompan-canvas');
+            const zoompan = document.querySelector('.zoompan');
+
+            canvas.style.backgroundImage = "url('https://www.igta5.com/images/gtav-map-atlas-huge.jpg')";
+            zoompan.style.backgroundColor = "#0FA8D2";
+            canvas.style.backgroundSize = "890px auto";
+        });
+    </script>
+</body>
+
+</html>
